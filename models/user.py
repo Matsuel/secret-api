@@ -8,5 +8,5 @@ class User(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(String, nullable=False, unique=True)
     api_key_id = Column(String, nullable=False, unique=True)
-    followsCount = Column(Integer, nullable=False)
-    followersCount = Column(Integer, nullable=False)
+    followsCount = Column(Integer, nullable=False, default=0)
+    followersCount = Column(Integer, nullable=False, default=0)

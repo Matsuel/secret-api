@@ -12,4 +12,4 @@ class Secret(Base):
     is_public = Column(Boolean, nullable=False)
     shares_spaces_id = Column(Integer, nullable=True)
     anonymous = Column(Boolean, nullable=False)
-    rate = Column(Integer, nullable=False)
+    rate = Column(Integer, nullable=False, default=0)
