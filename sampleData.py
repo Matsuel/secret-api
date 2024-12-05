@@ -2,6 +2,14 @@ from sqlalchemy import insert
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+from models.user import User
+from models.secret import Secret
+from models.category import Category
+from models.shared_space import SharedSpace
+from models.shared_space_user import SharedSpaceUser
+from models.liked_secret import LikedSecret
+from models.follower import Follower
+
 # an Engine, which the Session will use for connection
 # resources, typically in module scope
 engine = create_engine("postgresql+psycopg2://scott:tiger@localhost/")
