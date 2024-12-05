@@ -10,6 +10,6 @@ class Secret(Base):
     user_id = Column(Integer, nullable=False)
     category_id = Column(Integer, nullable=False)
     is_public = Column(Boolean, nullable=False)
-    shares_spaces_id = Column(Integer, nullable=True)
+    shared_space_id = Column(Integer, nullable=True)
     anonymous = Column(Boolean, nullable=False)
-    rate = Column(Integer, nullable=False, default=0)
+    likesCount = Column(Integer, nullable=False, default=0)
