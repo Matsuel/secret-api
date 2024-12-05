@@ -19,6 +19,16 @@ pip install -r requirements.txt
 
 ### Docker
 
+#### Create .env file 
+
+```env
+DATABASE_USER=your_user
+DATABASE_PASSWORD=your_password
+DATABASE_NAME=sekret
+```
+
+#### Run docker compose
+
 ```bash
-docker compose up -d
+docker compose --env-file .env up -d
 ```
