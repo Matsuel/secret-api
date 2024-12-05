@@ -1,10 +1,10 @@
 from fastapi import FastAPI
+from users.router import users_router
+from spaces.router import spaces_router
+from secrets.router import secrets_router
 
 app = FastAPI()
 
-if __name__ == '__main__':
-    print("Yo tout le monde c'est gotaga")
 
-@app.get("/")
-async def read_root():
-    return {"Hello": "World"}
+app.include_router(users_router)
+app.include_router(spaces_router)
