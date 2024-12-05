@@ -6,6 +6,10 @@ sekrets_router = APIRouter()
 def create_secret():
     pass
 
+@sekrets_router.get("/secrets/:space_id", tags=["secrets"])
+def get_secrets(space_id: int):
+    pass
+
 @sekrets_router.put("/secret/:secret_id", tags=["secrets"])
 def update_secret_content(secret_id: int):
     pass

@@ -2,6 +2,10 @@ from fastapi import APIRouter
 
 spaces_router = APIRouter()
 
+@spaces_router.get("/space/:space_id", tags=["spaces"])
+def get_space(space_id: int):
+    pass
+
 @spaces_router.post("/space", tags=["spaces"])
 def create_space():
     pass
