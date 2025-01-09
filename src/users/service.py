@@ -45,4 +45,19 @@ def delete_user_in_db(user_id: int):
         stmt = delete(User).where(User.id == user_id)
         session.execute(stmt)
         session.commit()
-        return True    
+        return True
+    
+def update_user_in_db(user_id: int, user: User):
+    if not check_if_user_exists(user_id):
+        return False
+    if user.username != "" and check_username_exists(user.username):
+        return False
+    with SessionLocal() as session:
+        stmt = update(User).where(User.id == user_id)
+        if user.username:
+            stmt = stmt.values(username=user.username)
+        if user.password:
+            stmt = stmt.values(password=user.password)
+        session.execute(stmt)
+        session.commit()
+        return True
