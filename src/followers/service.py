@@ -2,7 +2,7 @@ from ..models.follower import Follower
 from ..models.user import User
 from ..users.service import check_if_user_exists, get_user_by_id
 from src.models.database import SessionLocal
-from sqlalchemy import insert, delete
+from sqlalchemy import insert, delete, update
 
 def is_following(user_id: int, followed_id: int):
     with SessionLocal() as session:
@@ -19,9 +19,13 @@ def follow_user_in_db(user_id: int, followed_id: int):
         result = True
         if is_following(user_id, followed_id):
             stmt = delete(Follower).where(Follower.user_id == user_id, Follower.follower_id == followed_id)
+            edit_followers_count(followed_id, False)
+            edit_follows_count(user_id, False)
             result = False
         else:
             stmt = insert(Follower).values(user_id=user_id, follower_id=followed_id)
+            edit_followers_count(followed_id, True)
+            edit_follows_count(user_id, True)
         session.execute(stmt)
         session.commit()
         return result
@@ -43,3 +47,23 @@ def get_followers_in_db(user_id: int):
         for follower in followers:
             followers_infos.append(get_user_by_id(follower))
         return followers_infos
+    
+def edit_followers_count(user_id: int, increment: bool):
+    with SessionLocal() as session:
+        stmt = update(User).where(User.id == user_id)
+        if increment:
+            stmt = stmt.values(followersCount=User.followersCount + 1)
+        else:
+            stmt = stmt.values(followersCount=User.followersCount - 1)
+        session.execute(stmt)
+        session.commit()
+        
+def edit_follows_count(user_id: int, increment: bool):
+    with SessionLocal() as session:
+        stmt = update(User).where(User.id == user_id)
+        if increment:
+            stmt = stmt.values(followsCount=User.followsCount + 1)
+        else:
+            stmt = stmt.values(followsCount=User.followsCount - 1)
+        session.execute(stmt)
+        session.commit()
