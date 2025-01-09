@@ -1,10 +1,11 @@
 from fastapi import APIRouter
+from .service import get_users_list
 
 users_router = APIRouter()
 
 @users_router.get("/users", tags=["users"])
 def get_users():
-    pass
+    get_users_list()
 
 @users_router.get("/user/{user_id}", tags=["users"])
 def get_user_infos(user_id: int):
