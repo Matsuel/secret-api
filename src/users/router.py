@@ -1,6 +1,7 @@
 from fastapi import APIRouter
-from .service import get_users_list, get_user_by_id
+from .service import get_users_list, get_user_by_id, create_user_in_db
 from fastapi import HTTPException
+from ..models.user import UserModel
 
 users_router = APIRouter()
 
@@ -16,8 +17,11 @@ def get_user_infos(user_id: int):
         raise HTTPException(status_code=404, detail="User not found")
 
 @users_router.post("/user", tags=["users"])
-def create_user():
-    pass
+def create_user(user: UserModel):
+    result = create_user_in_db(user)
+    if result is None:
+        raise HTTPException(status_code=400, detail="Username already exists")
+    return result
 
 @users_router.put("/user/{user_id}", tags=["users"])
 def update_user(user_id: int):
