@@ -1,19 +1,19 @@
 from ..models.user import User
 from src.models.database import SessionLocal
-from sqlalchemy import insert
+from sqlalchemy import insert, update, delete
 
 
 def get_users_list():
     with SessionLocal() as session:
-        users = session.query(User).all()
+        users = session.query(User.id, User.username, User.followsCount, User.followersCount).all()
         if not users:
             return []
-        return users
+        return [user._asdict() for user in users]
     
 def get_user_by_id(user_id: int):
     with SessionLocal() as session:
-        user = session.query(User).get(user_id)
-        return user
+        user = session.query(User.id, User.username, User.followsCount, User.followersCount).filter(User.id == user_id).first()
+        return user._asdict() if user else None
 
 def check_if_user_exists(user_id: int):
     with SessionLocal() as session:
@@ -37,3 +37,12 @@ def create_user_in_db(user: User):
         session.execute(stmt)
         session.commit()
         return user
+    
+def delete_user_in_db(user_id: int):
+    if not check_if_user_exists(user_id):
+        return False
+    with SessionLocal() as session:
+        stmt = delete(User).where(User.id == user_id)
+        session.execute(stmt)
+        session.commit()
+        return True    

@@ -13,3 +13,4 @@ class User(Base):
 class UserModel(BaseModel):
     username: str
     password: str
+    
