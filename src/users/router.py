@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from .service import get_users_list, get_user_by_id, create_user_in_db, delete_user_in_db, update_user_in_db
 from fastapi import HTTPException
-from ..models.user import UserModel
+from src.models.user import UserModel
 
 users_router = APIRouter()
 

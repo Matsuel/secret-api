@@ -1,6 +1,6 @@
-from ..models.follower import Follower
-from ..models.user import User
-from ..users.service import check_if_user_exists, get_user_by_id
+from src.models.follower import Follower
+from src.models.user import User
+from src.users.service import check_if_user_exists, get_user_by_id
 from src.models.database import SessionLocal
 from sqlalchemy import insert, delete, update
 

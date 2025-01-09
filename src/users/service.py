@@ -1,4 +1,4 @@
-from ..models.user import User
+from src.models.user import User
 from src.models.database import SessionLocal
 from sqlalchemy import insert, update, delete
 

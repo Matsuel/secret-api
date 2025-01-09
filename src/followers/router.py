@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from fastapi import HTTPException
-from ..followers.service import follow_user_in_db, get_followers_in_db, get_follows_in_db
+from src.followers.service import follow_user_in_db, get_followers_in_db, get_follows_in_db
 
 followers_router = APIRouter()
 
