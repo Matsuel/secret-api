@@ -5,7 +5,8 @@ users_router = APIRouter()
 
 @users_router.get("/users", tags=["users"])
 def get_users():
-    get_users_list()
+    users = get_users_list()
+    return users
 
 @users_router.get("/user/{user_id}", tags=["users"])
 def get_user_infos(user_id: int):

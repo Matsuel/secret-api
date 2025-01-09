@@ -1,7 +1,5 @@
 from sqlalchemy import Column, Integer, Boolean
-from sqlalchemy.ext.declarative import declarative_base
-
-Base = declarative_base()
+from .database import Base
 
 class SharedSpaceUser(Base):
     __tablename__ = 'shared_spaces_users'

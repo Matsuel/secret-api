@@ -4,6 +4,9 @@ from src.spaces.router import spaces_router
 from src.sekrets.router import sekrets_router
 from src.auth.router import auth_router
 from src.docs.router import docs_router
+from src.models.database import init_db
+
+init_db()
 
 app = FastAPI()
 
