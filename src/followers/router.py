@@ -1,16 +1,18 @@
 from fastapi import APIRouter
 from fastapi import HTTPException
-from ..followers.service import follow_user_in_db
+from ..followers.service import follow_user_in_db, get_followers_in_db, get_follows_in_db
 
 followers_router = APIRouter()
 
 @followers_router.get("/user/{user_id}/follow", tags=["users"])
 def get_user_follows(user_id: int):
-    pass
+    follows = get_follows_in_db(user_id)
+    return follows
 
 @followers_router.get("/user/{user_id}/followers", tags=["users"])
 def get_user_followers(user_id: int):
-    pass
+    followers = get_followers_in_db(user_id)
+    return followers
 
 @followers_router.post("/user/{user_id}/follow/{followed_id}", tags=["users"])
 def follow_user(user_id: int, followed_id: int):
