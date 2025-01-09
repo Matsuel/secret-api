@@ -9,7 +9,9 @@ from src.models.database import init_db
 
 init_db()
 
-app = FastAPI()
+app = FastAPI(
+    title="Sekret API",
+)
 
 
 app.include_router(users_router)
