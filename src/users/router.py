@@ -22,7 +22,7 @@ def create_user(user: UserModel):
     result = create_user_in_db(user)
     if result is None:
         raise HTTPException(status_code=400, detail="Username already exists")
-    return result
+    return {"message": "User created"}
 
 @users_router.put("/user/{user_id}", tags=["users"])
 def update_user(user_id: int, user: UserModel):
