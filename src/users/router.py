@@ -37,11 +37,3 @@ def delete_user(user_id: int):
     if not result:
         raise HTTPException(status_code=404, detail="User not found")
     return {"message": "User deleted"}
-
-@users_router.get("/user/{user_id}/follow", tags=["users"])
-def get_user_follows(user_id: int):
-    pass
-
-@users_router.get("/user/{user_id}/followers", tags=["users"])
-def get_user_followers(user_id: int):
-    pass
