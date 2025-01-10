@@ -1,11 +1,12 @@
-from ..models.user import User
+from src.models.user import User
 from src.models.database import SessionLocal
 from sqlalchemy import insert, update, delete
+import bcrypt
 
 
-def get_users_list():
+def get_users_list(offset: int = 0, limit: int = 10):
     with SessionLocal() as session:
-        users = session.query(User.id, User.username, User.followsCount, User.followersCount).all()
+        users = session.query(User.id, User.username, User.followsCount, User.followersCount).offset(offset).limit(limit).all()
         if not users:
             return []
         return [user._asdict() for user in users]
@@ -33,10 +34,10 @@ def create_user_in_db(user: User):
     if check_username_exists(user.username):
         return None
     with SessionLocal() as session:
-        stmt = insert(User).values(username=user.username, password=user.password)
+        stmt = insert(User).values(username=user.username, password=hash_password(user.password))
         session.execute(stmt)
         session.commit()
-        return user
+        return True
     
 def delete_user_in_db(user_id: int):
     if not check_if_user_exists(user_id):
@@ -61,3 +62,9 @@ def update_user_in_db(user_id: int, user: User):
         session.execute(stmt)
         session.commit()
         return True
+
+def hash_password(password: str):
+    return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
+def verify_password(plain_password: str, hashed_password: str):
+    return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))

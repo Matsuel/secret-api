@@ -6,7 +6,7 @@ from .service import get_space
 from .service import create_space
 from .service import update_space
 from .service import invite_user_to_space
-
+from .service import delete_space
 class SpaceCreateRequest(BaseModel):
     name: str
     is_public: bool
@@ -50,3 +50,10 @@ def inviteUserInSpace(space_id: int, user_id: int):
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     return {"message": "User invited successfully"}
+
+@spaces_router.delete("/space/{space_id}", tags=["spaces"])
+def deleteSpace(space_id: int):
+     deleteSpace = delete_space(space_id)
+     if not deleteSpace:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Space not found")
+     return {"message": "Space deleted successfully"}

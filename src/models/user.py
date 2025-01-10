@@ -11,7 +11,12 @@ class User(Base):
     followersCount = Column(Integer, nullable=False, default=0)
     token = Column(String, nullable=True)
     
-class UserModel(BaseModel):
+class UserModelCreation(BaseModel):
     username: str
     password: str
     
+class UserModel(BaseModel):
+    id: int
+    username: str
+    followsCount: int
+    followersCount: int
