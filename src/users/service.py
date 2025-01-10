@@ -4,9 +4,9 @@ from sqlalchemy import insert, update, delete
 import bcrypt
 
 
-def get_users_list():
+def get_users_list(offset: int = 0, limit: int = 10):
     with SessionLocal() as session:
-        users = session.query(User.id, User.username, User.followsCount, User.followersCount).all()
+        users = session.query(User.id, User.username, User.followsCount, User.followersCount).offset(offset).limit(limit).all()
         if not users:
             return []
         return [user._asdict() for user in users]
