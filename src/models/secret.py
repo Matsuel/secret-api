@@ -1,5 +1,6 @@
 from pydantic import BaseModel
-from sqlalchemy import Column, Integer, String, Boolean
+from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
+from sqlalchemy.orm import relationship
 from .database import Base
 
 class Secret(Base):
@@ -16,8 +17,12 @@ class Secret(Base):
         nullable=False
     )
 
+    # Relation avec le modèle User
+    user = relationship("User", back_populates="secrets")
+
+    # Clé étrangère pour l'utilisateur
     user_id = Column(
-        Integer,
+        ForeignKey("users.id", ondelete="CASCADE"),
         nullable=False
     )
 

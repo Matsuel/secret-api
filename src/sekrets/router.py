@@ -1,4 +1,5 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
+from sekrets.service import create_secret_db
 from src.models.secret import Secret, CreateSecret, UpdateSecret
 from src.models.database import SessionLocal
 from src.models.database import SessionLocal
@@ -10,19 +11,15 @@ sekrets_router = APIRouter()
 
 @sekrets_router.post("/secret", tags=["secrets"])
 def create_secret(secret: CreateSecret):
-    with SessionLocal() as session:
-        stmt = insert(Secret).values(
-            text = secret.text,
-            user_id = secret.user_id,
-            category_id = secret.category_id,
-            is_public = secret.is_public,
-            shared_space_id = secret.shared_space_id,
-            anonymous = secret.anonymous,
-            likesCount = secret.likesCount
-        )
-        session.execute(stmt)
-        session.commit()
-    return secret
+    result = create_secret_db(secret)
+
+    if not result:
+        raise HTTPException(status_code=400, detail="Error creating secret")
+    
+    if result == "Utilisateur non trouvé":
+        raise HTTPException(status_code=404, detail="Utilisateur non trouvé")
+    
+    return {"message": "Secret created successfully"}
 
 ######################
 # Get all secrets
