@@ -17,21 +17,21 @@ def get_user_infos(user_id: int):
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
-@users_router.post("/user", tags=["users"])
+@users_router.post("/user", tags=["users"], status_code=201)
 def create_user(user: UserModelCreation):
     result = create_user_in_db(user)
     if result is None:
         raise HTTPException(status_code=400, detail="Username already exists")
     return {"message": "User created"}
 
-@users_router.put("/user/{user_id}", tags=["users"])
+@users_router.put("/user/{user_id}", tags=["users"], status_code=200)
 def update_user(user_id: int, user: UserModelCreation):
     result = update_user_in_db(user_id, user)
     if not result:
         raise HTTPException(status_code=404, detail="User not found or username already exists")
     return {"message": "User updated"}
 
-@users_router.delete("/user/{user_id}", tags=["users"])
+@users_router.delete("/user/{user_id}", tags=["users"], status_code=200)
 def delete_user(user_id: int):
     result = delete_user_in_db(user_id)
     if not result:
