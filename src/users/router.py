@@ -1,16 +1,16 @@
 from fastapi import APIRouter
 from .service import get_users_list, get_user_by_id, create_user_in_db, delete_user_in_db, update_user_in_db
 from fastapi import HTTPException
-from src.models.user import UserModel
+from src.models.user import UserModelCreation, UserModel
 
 users_router = APIRouter()
 
-@users_router.get("/users", tags=["users"])
+@users_router.get("/users", tags=["users"], response_model=list[UserModel])
 def get_users():
     users = get_users_list()
     return users
 
-@users_router.get("/user/{user_id}", tags=["users"])
+@users_router.get("/user/{user_id}", tags=["users"], response_model=UserModel)
 def get_user_infos(user_id: int):
     user = get_user_by_id(user_id)
     if user is None:
@@ -18,14 +18,14 @@ def get_user_infos(user_id: int):
     return user
 
 @users_router.post("/user", tags=["users"])
-def create_user(user: UserModel):
+def create_user(user: UserModelCreation):
     result = create_user_in_db(user)
     if result is None:
         raise HTTPException(status_code=400, detail="Username already exists")
     return {"message": "User created"}
 
 @users_router.put("/user/{user_id}", tags=["users"])
-def update_user(user_id: int, user: UserModel):
+def update_user(user_id: int, user: UserModelCreation):
     result = update_user_in_db(user_id, user)
     if not result:
         raise HTTPException(status_code=404, detail="User not found or username already exists")

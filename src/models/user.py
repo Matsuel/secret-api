@@ -10,7 +10,12 @@ class User(Base):
     followsCount = Column(Integer, nullable=False, default=0)
     followersCount = Column(Integer, nullable=False, default=0)
     
-class UserModel(BaseModel):
+class UserModelCreation(BaseModel):
     username: str
     password: str
     
+class UserModel(BaseModel):
+    id: int
+    username: str
+    followsCount: int
+    followersCount: int
