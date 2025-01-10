@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 from .database import Base
+from pydantic import BaseModel
 
 class User(Base):
     __tablename__ = 'users'
@@ -13,6 +14,7 @@ class User(Base):
 
      # Relation avec Secret
     secrets = relationship("Secret", back_populates="user")
+    token = Column(String, nullable=True, default=None)
     
 class UserModelCreation(BaseModel):
     username: str

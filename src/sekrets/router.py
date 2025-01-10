@@ -8,7 +8,7 @@ sekrets_router = APIRouter()
 ##############################
 # POST - Create a new secret
 
-@sekrets_router.post("/secret", tags=["secrets"])
+@sekrets_router.post("/secret", tags=["secrets"], status_code=201)
 def create_secret(secret: CreateSecret):
     result = create_secret_db(secret)
 
