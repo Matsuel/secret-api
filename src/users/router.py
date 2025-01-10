@@ -6,8 +6,8 @@ from src.models.user import UserModelCreation, UserModel
 users_router = APIRouter()
 
 @users_router.get("/users", tags=["users"], response_model=list[UserModel])
-def get_users():
-    users = get_users_list()
+def get_users(offset: int = 0, limit: int = 10):
+    users = get_users_list(offset, limit)
     return users
 
 @users_router.get("/user/{user_id}", tags=["users"], response_model=UserModel)

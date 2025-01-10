@@ -30,18 +30,18 @@ def follow_user_in_db(user_id: int, followed_id: int):
         session.commit()
         return result
     
-def get_follows_in_db(user_id: int):
+def get_follows_in_db(user_id: int, offset: int = 0, limit: int = 100):
     with SessionLocal() as session:
-        follows = session.query(Follower.follower_id).filter(Follower.user_id == user_id).all()
+        follows = session.query(Follower.follower_id).filter(Follower.user_id == user_id).offset(offset).limit(limit).all()
         follows = [follow.follower_id for follow in follows]
         followers_infos = []
         for follow in follows:
             followers_infos.append(get_user_by_id(follow))
         return followers_infos
     
-def get_followers_in_db(user_id: int):
+def get_followers_in_db(user_id: int, offset: int = 0, limit: int = 100):
     with SessionLocal() as session:
-        followers = session.query(Follower.user_id).filter(Follower.follower_id == user_id).all()
+        followers = session.query(Follower.user_id).filter(Follower.follower_id == user_id).offset(offset).limit(limit).all()
         followers = [follower.user_id for follower in followers]
         followers_infos = []
         for follower in followers:
