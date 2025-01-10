@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from src.models.secret import Secret, CreateSecret, UpdateSecret
 from src.models.database import SessionLocal
 from src.models.database import SessionLocal
-from src.sekrets.service import create_secret_db, get_all_secrets_from_db, get_secret_by_id, get_secret_by_space_id, update_secret_in_db, delete_secret_in_db, like_secret_in_db
+from src.sekrets.service import create_secret_db, get_all_secrets_from_db, get_secret_by_id, get_secrets_by_space_id, update_secret_in_db, delete_secret_in_db, like_secret_in_db
 sekrets_router = APIRouter()
 
 ##############################
@@ -18,7 +18,7 @@ def create_secret(secret: CreateSecret):
 ######################
 # Get all secrets
 
-@sekrets_router.get("/secrets", tags=["secrets"], response_model=list[Secret], status_code=200)
+@sekrets_router.get("/secrets", tags=["secrets"], status_code=200)
 def get_secrets_all(offset: int = 0, limit: int = 100):
     result = get_all_secrets_from_db(offset, limit)
     if not result:
@@ -28,7 +28,7 @@ def get_secrets_all(offset: int = 0, limit: int = 100):
 #############################
 # Get a secret by secret_id
 
-@sekrets_router.get("/secret/{secret_id}", tags=["secrets"], response_model=Secret, status_code=200)
+@sekrets_router.get("/secret/{secret_id}", tags=["secrets"], status_code=200)
 def get_secret_id(secret_id: int):
     result = get_secret_by_id(secret_id)
     if not result:
@@ -38,9 +38,9 @@ def get_secret_id(secret_id: int):
 ################################
 # Get secret by space_id
 
-@sekrets_router.get("/secret/space/{space_id}", tags=["secrets"], response_model=Secret, status_code=200)
+@sekrets_router.get("/secret/space/{space_id}", tags=["secrets"], status_code=200)
 def get_secrets(space_id: int):
-    result = get_secret_by_space_id(space_id)
+    result = get_secrets_by_space_id(space_id)
     if not result:
         raise HTTPException(status_code=404, detail="Secret not found")
     return result
@@ -75,7 +75,7 @@ def like_secret(secret_id: int):
         raise HTTPException(status_code=404, detail="Secret not found")
     return {"message": "Secret liked successfully"}
 
-@sekrets_router.get("/secrets/popular", tags=["secrets"], response_model=list[Secret], status_code=200)
+@sekrets_router.get("/secrets/popular", tags=["secrets"], status_code=200)
 def get_popular_secrets(offset: int = 0, limit: int = 10):
     with SessionLocal() as session:
         stmt = session.query(Secret).order_by(Secret.likesCount.desc()).offset(offset).limit(limit).all()
