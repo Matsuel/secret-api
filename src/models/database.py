@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 # Configuration de la base de données
-DATABASE_URL = "postgresql://admin:admin@localhost:5432/sekret"
+DATABASE_URL = "postgresql://forantis:password@localhost:5432/sekret"
 
 # Créer l'engine
 engine = create_engine(DATABASE_URL)
@@ -24,3 +24,10 @@ def init_db():
     from .shared_space_user import SharedSpaceUser
     from .shared_space import SharedSpace
     Base.metadata.create_all(bind=engine)
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
