@@ -113,3 +113,9 @@ def like_secret(secret_id: int):
         session.commit()
 
     return {"message": "Secret liked successfully"}
+
+@sekrets_router.get("/secrets/popular", tags=["secrets"])
+def get_popular_secrets(offset: int = 0, limit: int = 10):
+    with SessionLocal() as session:
+        stmt = session.query(Secret).order_by(Secret.likesCount.desc()).offset(offset).limit(limit).all()
+    return stmt
