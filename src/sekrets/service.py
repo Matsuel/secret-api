@@ -1,12 +1,18 @@
+from src.models.user import User
 from src.models.secret import Secret, CreateSecret
 from src.models.database import SessionLocal
 from sqlalchemy import insert, update
 
 def create_secret_db(secret: CreateSecret):
     with SessionLocal() as session:
+
+        user = session.query(User).filter(User.id == secret.user_id).first()
+        if not user:
+            return "Utilisateur non trouvé"
+        
         stmt = insert(Secret).values(
             text = secret.text,
-            user_id = secret.user_id,
+            user_id = user.id,
             category_id = secret.category_id,
             is_public = secret.is_public,
             shared_space_id = secret.shared_space_id,

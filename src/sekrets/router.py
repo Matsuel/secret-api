@@ -11,8 +11,13 @@ sekrets_router = APIRouter()
 @sekrets_router.post("/secret", tags=["secrets"], status_code=201)
 def create_secret(secret: CreateSecret):
     result = create_secret_db(secret)
+
     if not result:
         raise HTTPException(status_code=400, detail="Error creating secret")
+    
+    if result == "Utilisateur non trouvé":
+        raise HTTPException(status_code=404, detail="Utilisateur non trouvé")
+    
     return {"message": "Secret created successfully"}
 
 ######################
