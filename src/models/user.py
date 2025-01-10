@@ -9,6 +9,7 @@ class User(Base):
     password = Column(String, nullable=False)
     followsCount = Column(Integer, nullable=False, default=0)
     followersCount = Column(Integer, nullable=False, default=0)
+    token = Column(String, nullable=True)
     
 class UserModelCreation(BaseModel):
     username: str
