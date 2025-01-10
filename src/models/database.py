@@ -20,4 +20,11 @@ Base = declarative_base()
 
 # Créer les tables au démarrage
 def init_db():
+    from .user import User
+    from .category import Category
+    from .follower import Follower
+    from .liked_secret import LikedSecret
+    from .secret import Secret
+    from .shared_space_user import SharedSpaceUser
+    from .shared_space import SharedSpace
     Base.metadata.create_all(bind=engine)
