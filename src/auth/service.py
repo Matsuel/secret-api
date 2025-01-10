@@ -1,8 +1,8 @@
 from fastapi import Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from src.models.database import get_db
 from src.models.user import User
+from src.users.service import verify_password
 from src.auth.dependencies import oauth2_scheme
 import hashlib
 
@@ -16,7 +16,7 @@ def authenticate_user(db: Session, username: str, password: str):
     user = get_user(db, username)
     if not user:
         return False
-    if not password == user.password:
+    if not verify_password(password, user.password):
         return False
     if not user.token:
         user.token = hash_username_to_token(username)

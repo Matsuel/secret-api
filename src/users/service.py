@@ -1,4 +1,4 @@
-from src.models.user import User
+from src.models.user import User, UserModelCreation
 from src.models.database import SessionLocal
 from sqlalchemy import insert, update, delete
 import bcrypt
@@ -30,7 +30,7 @@ def check_username_exists(username: str):
             return False
         return True
     
-def create_user_in_db(user: User):
+def create_user_in_db(user: UserModelCreation):
     if check_username_exists(user.username):
         return None
     with SessionLocal() as session:
