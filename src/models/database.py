@@ -10,7 +10,11 @@ DATABASE_URL = f"postgresql://{getenv("DATABASE_USER")}:{getenv("DATABASE_PASSWO
 engine = create_engine(DATABASE_URL)
 
 # Créer la session
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+SessionLocal = sessionmaker(
+    autocommit=False,
+    autoflush=False,
+    bind=engine
+)
 
 # Définir Base une seule fois
 Base = declarative_base()
