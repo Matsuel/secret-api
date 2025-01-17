@@ -14,6 +14,9 @@ def get_users_list(offset: int = 0, limit: int = 10):
         for user in users:
             user = user._asdict()
             secrets = get_secrets_by_user_id(user["id"])
+            # TODO: Créer une fonction pour formater les données
+            user["followers"] = f"/user/{user['id']}/followers"
+            user["follows"] = f"/user/{user['id']}/follows"
             user["secrets"] = secrets
             formated_users.append(user)
         return formated_users

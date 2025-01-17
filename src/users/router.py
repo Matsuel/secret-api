@@ -17,6 +17,9 @@ def get_user_infos(user_id: int):
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
     secrets = get_secrets_by_user_id(user_id)
+    # TODO: Créer une fonction pour formater les données
+    user["followers"] = f"/user/{user_id}/followers"
+    user["follows"] = f"/user/{user_id}/follows"
     user["secrets"] = secrets
     return user
 
