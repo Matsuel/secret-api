@@ -1,15 +1,25 @@
 from src.models.user import User, UserModelCreation
 from src.models.database import SessionLocal
 from sqlalchemy import insert, update, delete
+from src.sekrets.service import get_secrets_by_user_id
 import bcrypt
 
 
 def get_users_list(offset: int = 0, limit: int = 10):
     with SessionLocal() as session:
         users = session.query(User.id, User.username, User.followsCount, User.followersCount).offset(offset).limit(limit).all()
+        formated_users = []
         if not users:
             return []
-        return [user._asdict() for user in users]
+        for user in users:
+            user = user._asdict()
+            secrets = get_secrets_by_user_id(user["id"])
+            # TODO: Créer une fonction pour formater les données
+            user["followers"] = f"/user/{user['id']}/followers"
+            user["follows"] = f"/user/{user['id']}/follows"
+            user["secrets"] = secrets
+            formated_users.append(user)
+        return formated_users
     
 def get_user_by_id(user_id: int):
     with SessionLocal() as session:

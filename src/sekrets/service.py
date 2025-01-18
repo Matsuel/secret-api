@@ -38,6 +38,11 @@ def get_secrets_by_space_id(space_id: int):
         stmt = session.query(Secret).filter(Secret.shared_space_id == space_id).first()
     return stmt
 
+def get_secrets_by_user_id(user_id: int):
+    with SessionLocal() as session:
+        stmt = session.query(Secret).filter(Secret.user_id == user_id).all()
+    return stmt
+
 def update_secret_in_db(secret_id: int, secret: Secret):
     if not get_secret_by_id(secret_id):
         return False
