@@ -7,6 +7,8 @@ categories_router = APIRouter()
 @categories_router.get("/categories", tags=["categories"])
 def get_categories(offset: int = 0, limit: int = 10):
     result = get_categories_list(offset, limit)
+    if not result:
+        raise HTTPException(status_code=404, detail="No categories found")
     return result
 
 @categories_router.get("/categories/{category_id}", tags=["categories"])
