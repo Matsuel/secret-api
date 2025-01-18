@@ -12,3 +12,8 @@ class TestSpacesRouter(unittest.TestCase):
         response = self.client.get("/spaces")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), [])
+
+    def test_get_space_by_id_with_no_space(self):
+        response = self.client.get("/space/1")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json(), None)
