@@ -12,3 +12,8 @@ class TestCategoriesRouter(unittest.TestCase):
         response = self.client.get("/categories")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), [])
+    
+    def test_get_category_by_id_with_no_category(self):
+        response = self.client.get("/categories/1")
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.json(), {"detail": "Category not found"})
