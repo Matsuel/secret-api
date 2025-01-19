@@ -9,6 +9,8 @@ users_router = APIRouter()
 @users_router.get("/users", tags=["users"])
 def get_users(offset: int = 0, limit: int = 10):
     users = get_users_list(offset, limit)
+    if not users:
+        raise HTTPException(status_code=404, detail="No users found")
     return users
 
 @users_router.get("/user/{user_id}", tags=["users"])

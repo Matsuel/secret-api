@@ -20,12 +20,16 @@ spaces_router = APIRouter()
 @spaces_router.get("/spaces", tags=["spaces"])
 def getSpacesList():
     spaces = get_spaces_list()
+    if not spaces:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No spaces found")
     return spaces
 
 
 @spaces_router.get("/space/{space_id}", tags=["spaces"])
 def getSpace(space_id: int):
     space = get_space(space_id)
+    if not space:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Space not found")
     return space
 
 @spaces_router.post("/space", tags=["spaces"])
