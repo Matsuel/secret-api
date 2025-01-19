@@ -32,3 +32,13 @@ DATABASE_NAME=sekret
 ```bash
 docker compose --env-file .env up -d
 ```
+
+## Run unittest
+
+```bash
+python -m unittest discorver -s tests
+```
+or
+```bash
+python3 -m unittest discorver -s tests
+```
