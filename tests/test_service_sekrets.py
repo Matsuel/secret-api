@@ -5,6 +5,9 @@ from src.models.secret import CreateSecret
 
 class TestSekretsService(unittest.TestCase):
 
+    #############################
+    # create_secret_db(secret: CreateSecret) test cases
+
     @patch("src.sekrets.service.SessionLocal")
     def test_create_sekret_in_db(self, mock_session_local):
         sekret = CreateSecret(
@@ -22,6 +25,9 @@ class TestSekretsService(unittest.TestCase):
         mock_session.execute.assert_called_once()
         mock_session.commit.assert_called_once()
         self.assertTrue(result)
+
+    #############################
+    # like_secret_in_db(secret_id: int) test cases
 
     @patch("src.sekrets.service.SessionLocal")
     def test_like_secret_in_db(self, mock_session_local):
@@ -43,6 +49,9 @@ class TestSekretsService(unittest.TestCase):
         mock_session.commit.assert_called_once()
         self.assertTrue(result)
 
+    #############################
+    # delete_secret_in_db(secret_id: int) test cases
+
     @patch("src.sekrets.service.SessionLocal")
     def test_delete_secret_in_db(self, mock_session_local):
         sekret = CreateSecret(
@@ -63,6 +72,9 @@ class TestSekretsService(unittest.TestCase):
         mock_session.commit.assert_called_once()
         self.assertTrue(result)
 
+    #############################
+    # update_secret_in_db(secret_id: int, secret: Secret) test cases
+
     @patch("src.sekrets.service.SessionLocal")
     def test_update_secret_in_db(self, mock_session_local):
         sekret = CreateSecret(
@@ -78,7 +90,7 @@ class TestSekretsService(unittest.TestCase):
         mock_session_local.return_value.__enter__.return_value = mock_session
         create_secret_db(sekret)
         mock_session.commit = MagicMock()
-        mock_session.execute.reset_mock()  # Reset the mock call count
+        mock_session.execute.reset_mock()
         sekret.text = "new_text"
         result = update_secret_in_db(1, sekret)
         mock_session.execute.assert_called_once()
