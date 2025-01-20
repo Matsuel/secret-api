@@ -5,6 +5,19 @@ from src.sekrets.service import get_secrets_by_user_id
 import bcrypt
 
 
+def get_user_infos(user_id: int):
+    with SessionLocal() as session:
+        user = session.query(User.id, User.username, User.followsCount, User.followersCount).filter(User.id == user_id).first()
+        if user is None:
+            return None
+        user = user._asdict()
+        secrets = get_secrets_by_user_id(user_id)
+        user["followers"] = f"/user/{user_id}/followers"
+        user["follows"] = f"/user/{user_id}/follows"
+        user["secrets"] = secrets
+        return user
+
+
 def get_users_list(offset: int = 0, limit: int = 10):
     with SessionLocal() as session:
         users = session.query(User.id, User.username, User.followsCount, User.followersCount).offset(offset).limit(limit).all()
@@ -12,19 +25,11 @@ def get_users_list(offset: int = 0, limit: int = 10):
         if not users:
             return []
         for user in users:
-            user = user._asdict()
-            secrets = get_secrets_by_user_id(user["id"])
-            # TODO: Créer une fonction pour formater les données
-            user["followers"] = f"/user/{user['id']}/followers"
-            user["follows"] = f"/user/{user['id']}/follows"
-            user["secrets"] = secrets
-            formated_users.append(user)
+            formated_users.append(get_user_infos(user.id))
         return formated_users
     
 def get_user_by_id(user_id: int):
-    with SessionLocal() as session:
-        user = session.query(User.id, User.username, User.followsCount, User.followersCount).filter(User.id == user_id).first()
-        return user._asdict() if user else None
+    return get_user_infos(user_id)
 
 def check_if_user_exists(user_id: int):
     with SessionLocal() as session:
