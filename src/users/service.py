@@ -73,7 +73,7 @@ def update_user_in_db(user_id: int, user: User):
         if user.username:
             stmt = stmt.values(username=user.username)
         if user.password:
-            stmt = stmt.values(password=user.password)
+            stmt = stmt.values(password=hash_password(user.password))
         session.execute(stmt)
         session.commit()
         return True
@@ -91,4 +91,5 @@ def hash_password(password: str):
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
 def verify_password(plain_password: str, hashed_password: str):
+    print(plain_password, hashed_password)
     return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))
