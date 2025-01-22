@@ -2,20 +2,23 @@ from fastapi import APIRouter
 from src.users.service import get_users_list, create_user_in_db, delete_user_in_db, update_user_in_db, get_user_by_id
 from fastapi import HTTPException
 from src.models.user import UserModelCreation
+from src.auth.service import authenticate_user
 
 users_router = APIRouter()
 
 @users_router.get("/users", tags=["users"])
-def get_users(offset: int = 0, limit: int = 10):
-    # Prendre un token en paramètre et vérifier si l'utilisateur est authentifié avant de retourner les informations
+def get_users(offset: int = 0, limit: int = 10, token: str = None):
+    if not authenticate_user(token):
+        raise HTTPException(status_code=401, detail="Unauthorized")
     users = get_users_list(offset, limit)
     if not users:
         raise HTTPException(status_code=404, detail="No users found")
     return users
 
 @users_router.get("/user/{user_id}", tags=["users"])
-def get_user_infos(user_id: int):
-    # Prendre un token en paramètre et vérifier si l'utilisateur est authentifié avant de retourner les informations
+def get_user_infos(user_id: int, token: str = None):
+    if not authenticate_user(token):
+        raise HTTPException(status_code=401, detail="Unauthorized")
     user = get_user_by_id(user_id)
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
@@ -30,7 +33,7 @@ def create_user(user: UserModelCreation):
 
 @users_router.put("/user/{user_id}", tags=["users"], status_code=200)
 def update_user(user_id: int, user: UserModelCreation):
-    # Prendre un token en paramètre et vérifier si l'utilisateur est authentifié avant de mettre à jour les informations
+    # Prendre un token en paramètre et vérifier si l'utilisateur est authentifié avant de mettre à jour les informations, renvoyer un nouveau token si l'utilisateur a changé son nom d'utilisateur
     result = update_user_in_db(user_id, user)
     if not result:
         raise HTTPException(status_code=404, detail="User not found or username already exists")
