@@ -5,7 +5,7 @@ from src.sekrets.service import get_secrets_by_user_id
 import bcrypt
 
 
-def get_user_infos(user_id: int):
+def get_user_infos(user_id: int) -> dict:
     with SessionLocal() as session:
         user = session.query(User.id, User.username, User.followsCount, User.followersCount).filter(User.id == user_id).first()
         if user is None:
@@ -28,7 +28,7 @@ def get_users_list(offset: int = 0, limit: int = 10):
             formated_users.append(get_user_infos(user.id))
         return formated_users
     
-def get_user_by_id(user_id: int):
+def get_user_by_id(user_id: int) -> dict:
     return get_user_infos(user_id)
 
 def check_if_user_exists(user_id: int):
@@ -73,13 +73,23 @@ def update_user_in_db(user_id: int, user: User):
         if user.username:
             stmt = stmt.values(username=user.username)
         if user.password:
-            stmt = stmt.values(password=user.password)
+            stmt = stmt.values(password=hash_password(user.password))
         session.execute(stmt)
         session.commit()
         return True
+    
+def authenticate_user(username: str, password: str) -> dict:
+    with SessionLocal() as session:
+        user = session.query(User).filter(User.username == username).first()
+        if user is None:
+            return None
+        if not verify_password(password, user.password):
+            return None
+        return user
 
 def hash_password(password: str):
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
 def verify_password(plain_password: str, hashed_password: str):
+    print(plain_password, hashed_password)
     return bcrypt.checkpw(plain_password.encode('utf-8'), hashed_password.encode('utf-8'))

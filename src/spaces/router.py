@@ -19,6 +19,7 @@ spaces_router = APIRouter()
 
 @spaces_router.get("/spaces", tags=["spaces"])
 def getSpacesList():
+    # Prendre un token en paramètre et vérifier si l'utilisateur est authentifié avant de retourner les spaces
     spaces = get_spaces_list()
     if not spaces:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No spaces found")
@@ -27,6 +28,7 @@ def getSpacesList():
 
 @spaces_router.get("/space/{space_id}", tags=["spaces"])
 def getSpace(space_id: int):
+    # Prendre un token en paramètre et vérifier si l'utilisateur est authentifié avant de retourner les informations
     space = get_space(space_id)
     if not space:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Space not found")
@@ -34,6 +36,7 @@ def getSpace(space_id: int):
 
 @spaces_router.post("/space", tags=["spaces"])
 def createSpace(space: SpaceCreateRequest):
+        # Prendre un token en paramètre et vérifier si l'utilisateur est authentifié avant de créer un space avec l'id de l'utilisateur comme propriétaire
         print(f"Received: name={space.name}, is_public={space.is_public}")
         new_space = create_space(space.name, space.is_public)
         if not new_space:
@@ -42,6 +45,7 @@ def createSpace(space: SpaceCreateRequest):
 
 @spaces_router.put("/space/{space_id}", tags=["spaces"])
 def updateSpace(space_id: int, space: SpaceUpdateRequest):
+        # Prendre un token en paramètre et vérifier si l'utilisateur est authentifié avant de mettre à jour les informations si l'utilisateur est le propriétaire du space
         updated_space = update_space(space_id, space.name, space.is_public)
         if not updated_space:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Space not found")
@@ -57,6 +61,7 @@ def inviteUserInSpace(space_id: int, user_id: int):
 
 @spaces_router.delete("/space/{space_id}", tags=["spaces"])
 def deleteSpace(space_id: int):
+    # Prendre un token en paramètre et vérifier si l'utilisateur est authentifié avant de supprimer si l'utilisateur est le propriétaire du space
      deleteSpace = delete_space(space_id)
      if not deleteSpace:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Space not found")
