@@ -1,7 +1,8 @@
 from fastapi import APIRouter
-from .service import get_users_list, create_user_in_db, delete_user_in_db, update_user_in_db, get_user_infos
+from .service import get_users_list, create_user_in_db, delete_user_in_db, update_user_in_db, get_user_by_id
 from fastapi import HTTPException
 from src.models.user import UserModelCreation
+from src.auth.service import create_access_token, verify_token, authenticate_user
 
 users_router = APIRouter()
 
@@ -14,7 +15,14 @@ def get_users(offset: int = 0, limit: int = 10):
 
 @users_router.get("/user/{user_id}", tags=["users"])
 def get_user_infos(user_id: int):
-    user = get_user_infos(user_id)
+    user = get_user_by_id(user_id)
+    print(user)
+    token = create_access_token(user)
+    print(token)
+    decoded_token = verify_token(token)
+    print(decoded_token)
+    auth = authenticate_user(token)
+    print(auth)
     if user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return user
