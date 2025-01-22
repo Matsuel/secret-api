@@ -10,6 +10,7 @@ sekrets_router = APIRouter()
 
 @sekrets_router.post("/secret", tags=["secrets"], status_code=201)
 def create_secret(secret: CreateSecret):
+    # Prendre un token en paramètre et vérifier si l'utilisateur est authentifié avant de créer un secret avec l'id de l'utilisateur comme propriétaire
     result = create_secret_db(secret)
 
     if not result:
@@ -25,6 +26,7 @@ def create_secret(secret: CreateSecret):
 
 @sekrets_router.get("/secrets", tags=["secrets"], status_code=200)
 def get_secrets_all(offset: int = 0, limit: int = 100):
+    # Prendre un token en paramètre et vérifier si l'utilisateur est authentifié avant de retourner les secrets
     result = get_all_secrets_from_db(offset, limit)
     if not result:
         raise HTTPException(status_code=404, detail="No secrets found")
@@ -35,6 +37,7 @@ def get_secrets_all(offset: int = 0, limit: int = 100):
 
 @sekrets_router.get("/secret/{secret_id}", tags=["secrets"], status_code=200)
 def get_secret_id(secret_id: int):
+    # Prendre un token en paramètre et vérifier si l'utilisateur est authentifié avant de retourner les informations, et vérifier si l'utilisateur a le droit de voir le secret
     result = get_secret_by_id(secret_id)
     if not result:
         raise HTTPException(status_code=404, detail="Secret not found")
@@ -45,6 +48,7 @@ def get_secret_id(secret_id: int):
 
 @sekrets_router.get("/secret/space/{space_id}", tags=["secrets"], status_code=200)
 def get_secrets(space_id: int):
+    # Prendre un token en paramètre et vérifier si l'utilisateur est authentifié avant de retourner les secrets
     result = get_secrets_by_space_id(space_id)
     if not result:
         raise HTTPException(status_code=404, detail="Secret not found")
@@ -55,6 +59,7 @@ def get_secrets(space_id: int):
 
 @sekrets_router.put("/secret/{secret_id}", tags=["secrets"], status_code=200)
 def update_secret_content(secret_id: int, secret: UpdateSecret):
+    # Prendre un token en paramètre et vérifier si l'utilisateur est authentifié avant de mettre à jour les informations si l'utilisateur est le propriétaire du secret
     result = update_secret_in_db(secret_id, secret)
     if not result:
         raise HTTPException(status_code=404, detail="Secret not found")
@@ -65,6 +70,7 @@ def update_secret_content(secret_id: int, secret: UpdateSecret):
 
 @sekrets_router.delete("/secret/{secret_id}", tags=["secrets"], status_code=200)
 def delete_secret(secret_id: int):
+    # Prendre un token en paramètre et vérifier si l'utilisateur est authentifié avant de supprimer les informations, et vérifier si l'utilisateur a le droit de supprimer le secret il doit être le propriétaire du secret
     result = delete_secret_in_db(secret_id)
     if not result:
         raise HTTPException(status_code=404, detail="Secret not found")
@@ -75,6 +81,7 @@ def delete_secret(secret_id: int):
 
 @sekrets_router.post("/secret/{secret_id}/like", tags=["secrets"], status_code=200)
 def like_secret(secret_id: int):
+    # Prendre un token en paramètre et vérifier si l'utilisateur est authentifié avant de liker le secret
     result = like_secret_in_db(secret_id)
     if not result:
         raise HTTPException(status_code=404, detail="Secret not found")
