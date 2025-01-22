@@ -10,4 +10,4 @@ def login(credentials: UserModelCreation):
     user = authenticate_user(credentials.username, credentials.password)
     if not user:
         raise HTTPException(status_code=400, detail="Invalid credentials")
-    return {"token": auth_service.create_access_token(user.__dict__)}
+    return {"token": auth_service.create_access_token(user)}

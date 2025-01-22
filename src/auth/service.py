@@ -7,9 +7,9 @@ from datetime import datetime
 def get_user(db: Session, username: str):
     return db.query(User).filter(User.username == username).first()
 
-def create_access_token(user: dict):
+def create_access_token(user: User) -> dict:
     from datetime import timedelta
-    payload = {"user_id": user['id'], "exp": datetime.now() + timedelta(seconds=900)}
+    payload = {"user_id": user.id, "exp": datetime.now() + timedelta(seconds=900)}
     return jwt.encode(payload, "secret", algorithm="HS256")
 
 def verify_token(token: str) -> dict|None:
