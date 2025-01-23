@@ -10,21 +10,21 @@ def is_following(user_id: int, followed_id: int):
         return True if follower else False
     
 
-def follow_user_in_db(user_id: int, followed_id: int):
-    if not check_if_user_exists(user_id) or not check_if_user_exists(followed_id):
+def follow_user_in_db(user_id: int, user_to_follow_id: int):
+    if not check_if_user_exists(user_id) or not check_if_user_exists(user_to_follow_id):
         return None
-    if user_id == followed_id:
+    if user_id == user_to_follow_id:
         return None
     with SessionLocal() as session:
         result = True
-        if is_following(user_id, followed_id):
-            stmt = delete(Follower).where(Follower.user_id == user_id, Follower.follower_id == followed_id)
-            edit_followers_count(followed_id, False)
+        if is_following(user_id, user_to_follow_id):
+            stmt = delete(Follower).where(Follower.user_id == user_id, Follower.follower_id == user_to_follow_id)
+            edit_followers_count(user_to_follow_id, False)
             edit_follows_count(user_id, False)
             result = False
         else:
-            stmt = insert(Follower).values(user_id=user_id, follower_id=followed_id)
-            edit_followers_count(followed_id, True)
+            stmt = insert(Follower).values(user_id=user_id, follower_id=user_to_follow_id)
+            edit_followers_count(user_to_follow_id, True)
             edit_follows_count(user_id, True)
         session.execute(stmt)
         session.commit()
