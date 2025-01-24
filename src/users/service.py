@@ -3,6 +3,7 @@ from src.models.database import SessionLocal
 from sqlalchemy import insert, update, delete
 from src.sekrets.service import get_secrets_by_user_id
 import bcrypt
+from sqlalchemy.orm import Session
 
 
 def get_user_infos(user_id: int) -> dict:
@@ -78,14 +79,13 @@ def update_user_in_db(user_id: int, user: User):
         session.commit()
         return True
     
-def authenticate_user(username: str, password: str) -> dict:
-    with SessionLocal() as session:
-        user = session.query(User).filter(User.username == username).first()
-        if user is None:
-            return None
-        if not verify_password(password, user.password):
-            return None
-        return user
+def authenticate_user(username: str, password: str, db: Session) -> dict:
+    user = db.query(User).filter(User.username == username).first()
+    if user is None:
+        return None
+    if not verify_password(password, user.password):
+        return None
+    return user
 
 def hash_password(password: str):
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
