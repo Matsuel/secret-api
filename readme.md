@@ -36,7 +36,7 @@ docker compose --env-file .env up -d
 ## Run unittest
 
 ```bash
-python -m unittest discorver -s tests
+python -m unittest discover -s tests
 ```
 or
 ```bash
