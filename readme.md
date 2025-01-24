@@ -40,5 +40,5 @@ python -m unittest discorver -s tests
 ```
 or
 ```bash
-python3 -m unittest discorver -s tests
+python3 -m unittest discover -s tests
 ```
