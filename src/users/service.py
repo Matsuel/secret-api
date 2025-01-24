@@ -1,8 +1,8 @@
+import bcrypt
 from src.models.user import User, UserModelCreation
 from src.models.database import SessionLocal
 from sqlalchemy import insert, update, delete
 from src.sekrets.service import get_secrets_by_user_id
-import bcrypt
 from sqlalchemy.orm import Session
 
 
