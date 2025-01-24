@@ -2,7 +2,6 @@ from fastapi import APIRouter, Depends
 from src.auth import service as auth_service
 from fastapi import HTTPException
 from src.models.user import UserModelCreation
-from src.auth.service import authenticate_user
 from src.users.service import get_users_list, create_user_in_db, delete_user_in_db, update_user_in_db, get_user_by_id
 
 users_router = APIRouter()
