@@ -63,3 +63,16 @@ def delete_space(space_id: int):
         session.delete(space)
         session.commit()
         return space
+    
+def accept_invitation(space_id: int, user_id: int):
+    with SessionLocal() as session:
+        invitation = session.query(SharedSpaceUser).filter(
+            SharedSpaceUser.shared_space_id == space_id,
+            SharedSpaceUser.user_id == user_id
+        ).first()
+        if not invitation:
+            return None
+        invitation.invitation_accepted = True
+        session.commit()
+        session.refresh(invitation)
+        return invitation
