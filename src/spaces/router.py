@@ -7,6 +7,9 @@ from .service import create_space
 from .service import update_space
 from .service import invite_user_to_space
 from .service import delete_space
+from .service import accept_invitation
+from fastapi import Depends
+from ..auth.service import get_current_user
 class SpaceCreateRequest(BaseModel):
     name: str
     is_public: bool
@@ -58,6 +61,14 @@ def inviteUserInSpace(space_id: int, user_id: int):
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
     return {"message": "User invited successfully"}
+
+@spaces_router.put("/space/{space_id}/invite/accepted", tags=["spaces"])
+def acceptInvitation(space_id: int, current_user: dict = Depends(get_current_user)):
+    user_id = current_user.get("user_id")
+    
+    accept_invitation(space_id, user_id)
+    
+    return {"message": "Invitation accepted"}
 
 @spaces_router.delete("/space/{space_id}", tags=["spaces"])
 def deleteSpace(space_id: int):
