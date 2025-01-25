@@ -20,13 +20,6 @@ def get_user_infos(user_id: int, current_user: dict = Depends(auth_service.get_c
         raise HTTPException(status_code=404, detail="User not found")
     return user
 
-@users_router.post("/user", tags=["users"], status_code=201)
-def create_user(user: UserModelCreation):
-    result = create_user_in_db(user)
-    if result is None:
-        raise HTTPException(status_code=400, detail="Username already exists")
-    return {"message": "User created"}
-
 @users_router.put("/user/", tags=["users"], status_code=200)
 def update_user(user: UserModelCreation, current_user: dict = Depends(auth_service.get_current_user)):
     result = update_user_in_db(current_user['id'], user)

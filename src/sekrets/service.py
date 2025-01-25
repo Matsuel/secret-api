@@ -3,10 +3,10 @@ from src.models.secret import Secret, CreateSecret
 from src.models.database import SessionLocal
 from sqlalchemy import insert, update
 
-def create_secret_db(secret: CreateSecret):
+def create_secret_db(secret: CreateSecret, user_id: int):
     with SessionLocal() as session:
 
-        user = session.query(User).filter(User.id == secret.user_id).first()
+        user = session.query(User).filter(User.id == user_id).first()
         if not user:
             return "Utilisateur non trouvé"
         
