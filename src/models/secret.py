@@ -54,7 +54,6 @@ class Secret(Base):
 
 class CreateSecret(BaseModel):
     text: str
-    user_id: int
     category_id: int
     is_public: bool
     shared_space_id: int

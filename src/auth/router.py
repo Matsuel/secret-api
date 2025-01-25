@@ -3,6 +3,8 @@ from sqlalchemy.orm import Session
 from src.auth import service as auth_service
 from src.models.database import get_db
 from src.users.service import authenticate_user
+from src.models.user import UserModelCreation
+from src.users.service import create_user_in_db
 
 auth_router = APIRouter()
 
@@ -20,3 +22,10 @@ def login(
     # Crée un token d'accès
     token = auth_service.create_access_token(user)
     return {"access_token": token, "token_type": "bearer"}
+
+@auth_router.post("/auth/register", tags=["auth"], status_code=201)
+def create_user(user: UserModelCreation):
+    result = create_user_in_db(user)
+    if result is None:
+        raise HTTPException(status_code=400, detail="Username already exists")
+    return {"message": "User created"}
