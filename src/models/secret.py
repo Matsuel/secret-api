@@ -26,8 +26,12 @@ class Secret(Base):
         nullable=False
     )
 
+     # Relation avec le modèle Category
+    category = relationship("Category", back_populates="secrets")
+
+    # Clé étrangère pour la catégorie
     category_id = Column(
-        Integer,
+        ForeignKey("categories.id", ondelete="CASCADE"),
         nullable=False
     )
 
@@ -58,7 +62,6 @@ class CreateSecret(BaseModel):
     is_public: bool
     shared_space_id: int
     anonymous: bool
-    likesCount: int
 
 class UpdateSecret(BaseModel):
     text: str

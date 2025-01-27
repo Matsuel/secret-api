@@ -5,6 +5,7 @@ from src.followers.service import follow_user_in_db, get_followers_in_db, get_fo
 
 followers_router = APIRouter()
 
+# Get all follows of a user
 @followers_router.get("/user/{user_id}/follow", tags=["users"])
 def get_user_follows(user_id: int, current_user: dict = Depends(auth_service.get_current_user), offset: int = 0, limit: int = 100):
     follows = get_follows_in_db(user_id, offset, limit)
@@ -12,6 +13,7 @@ def get_user_follows(user_id: int, current_user: dict = Depends(auth_service.get
         raise HTTPException(status_code=404, detail="No follows found")
     return follows
 
+# Get all followers of a user
 @followers_router.get("/user/{user_id}/followers", tags=["users"])
 def get_user_followers(user_id: int, current_user: dict = Depends(auth_service.get_current_user), offset: int = 0, limit: int = 100):
     followers = get_followers_in_db(user_id, offset, limit)

@@ -1,3 +1,4 @@
+from src.models.category import Category
 from src.models.user import User
 from src.models.secret import Secret, CreateSecret
 from src.models.database import SessionLocal
@@ -42,6 +43,29 @@ def get_secrets_by_user_id(user_id: int):
     with SessionLocal() as session:
         stmt = session.query(Secret).filter(Secret.user_id == user_id).all()
     return stmt
+
+
+def get_secrets_by_category(category_id: int, offset: int = 0, limit: int = 10):
+    with SessionLocal() as session:
+        secrets = (
+            session.query(Secret)
+            .join(Category, Secret.category_id == Category.id)
+            .filter(Secret.category_id == category_id)
+            .offset(offset)
+            .limit(limit)
+            .all()
+        )
+        result = [
+            {
+                "id": s.id,
+                "text": s.text,
+                "category_id": s.category_id,
+                "category_name": s.category.name if s.category else None
+            }
+            for s in secrets
+        ]
+    return result
+
 
 def update_secret_in_db(secret_id: int, secret: Secret):
     if not get_secret_by_id(secret_id):

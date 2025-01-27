@@ -1,4 +1,3 @@
-from pydantic import BaseModel
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 from .database import Base
@@ -13,7 +12,7 @@ class User(Base):
     followersCount = Column(Integer, nullable=False, default=0)
     token = Column(String, nullable=True, default=None)
 
-     # Relation avec Secret
+    # Relation avec Secret
     secrets = relationship("Secret", back_populates="user")
     
 class UserModelCreation(BaseModel):

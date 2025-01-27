@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException, Depends
+from src.models.category import Category
 from src.models.secret import Secret, CreateSecret, UpdateSecret
 from src.models.database import SessionLocal
-from src.models.database import SessionLocal
 from src.auth import service as auth_service
-from src.sekrets.service import create_secret_db, get_all_secrets_from_db, get_secret_by_id, get_secrets_by_space_id, update_secret_in_db, delete_secret_in_db, like_secret_in_db
+from src.sekrets.service import create_secret_db, get_all_secrets_from_db, get_secret_by_id, get_secrets_by_space_id, update_secret_in_db, delete_secret_in_db, like_secret_in_db, get_secrets_by_category as get_secrets_by_category_service
 sekrets_router = APIRouter()
 
 ##############################
@@ -86,8 +86,26 @@ def like_secret(secret_id: int, current_user: dict = Depends(auth_service.get_cu
         raise HTTPException(status_code=404, detail="Secret not found")
     return {"message": "Secret liked successfully"}
 
+################################
+# Get popular secrets
+
 @sekrets_router.get("/secrets/popular", tags=["secrets"], status_code=200)
 def get_popular_secrets(offset: int = 0, limit: int = 10, current_user: dict = Depends(auth_service.get_current_user)):
     with SessionLocal() as session:
         stmt = session.query(Secret).order_by(Secret.likesCount.desc()).offset(offset).limit(limit).all()
     return stmt
+
+################################
+# Get category by secrets
+
+@sekrets_router.get("/secrets/category/{category_id}", tags=["secrets"], status_code=200)
+def get_secrets_by_category(
+    category_id: int, 
+    offset: int = 0, 
+    limit: int = 10, 
+    current_user: dict = Depends(auth_service.get_current_user)
+):
+    result = get_secrets_by_category_service(category_id, offset, limit)
+    if not result:
+        raise HTTPException(status_code=404, detail="No secrets found for this category")
+    return result
