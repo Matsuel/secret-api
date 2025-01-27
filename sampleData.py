@@ -30,7 +30,6 @@ class Category(Base):
     __tablename__ = 'categories'
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
-    user_id = Column(Integer, ForeignKey('users.id'))
 
 class SharedSpace(Base):
     __tablename__ = 'shared_spaces'
