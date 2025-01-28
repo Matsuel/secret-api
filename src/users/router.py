@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status
 from src.auth import service as auth_service
 from fastapi import HTTPException
 from src.models.user import UserModelCreation
@@ -7,30 +7,30 @@ from src.users.service import get_users_list, delete_user_in_db, update_user_in_
 
 users_router = APIRouter()
 
-@users_router.get("/users", tags=["users"], response_model=list[UserInfosModel])
+@users_router.get("/users", tags=["users"], response_model=list[UserInfosModel], status_code=status.HTTP_200_OK)
 async def get_users(offset: int = 0, limit: int = 10, current_user: dict = Depends(auth_service.get_current_user)):
     users = get_users_list(offset, limit)
     if not users:
-        raise HTTPException(status_code=404, detail="No users found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No users found")
     return users
 
-@users_router.get("/user/{user_id}", tags=["users"], response_model=UserInfosModel)
+@users_router.get("/user/{user_id}", tags=["users"], response_model=UserInfosModel, status_code=status.HTTP_200_OK)
 def get_user_infos(user_id: int, current_user: dict = Depends(auth_service.get_current_user)):
     user = get_user_by_id(user_id)
     if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     return user
 
-@users_router.put("/user/", tags=["users"], status_code=200, response_model=PutModelResponse)
+@users_router.put("/user/", tags=["users"], status_code=status.HTTP_200_OK, response_model=PutModelResponse)
 def update_user(user: UserModelCreation, current_user: dict = Depends(auth_service.get_current_user)):
     result = update_user_in_db(current_user['id'], user)
     if not result:
-        raise HTTPException(status_code=404, detail="User not found or username already exists")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found or username already exists")
     return {"message": "User updated"}
 
-@users_router.delete("/user/", tags=["users"], status_code=200, response_model=DeleteModelResponse)
+@users_router.delete("/user/", tags=["users"], status_code=status.HTTP_200_OK, response_model=DeleteModelResponse)
 def delete_user(current_user: dict = Depends(auth_service.get_current_user)):
     result = delete_user_in_db(current_user['id'])
     if not result:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     return {"message": "User deleted"}
