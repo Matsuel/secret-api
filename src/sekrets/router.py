@@ -4,12 +4,15 @@ from src.models.database import SessionLocal
 from src.models.database import SessionLocal
 from src.auth import service as auth_service
 from src.sekrets.service import create_secret_db, get_all_secrets_from_db, get_secret_by_id, get_secrets_by_space_id, update_secret_in_db, delete_secret_in_db, like_secret_in_db
+from src.models.results import PostModelResponse, PutModelResponse, DeleteModelResponse, SecretModel
+
+
 sekrets_router = APIRouter()
 
 ##############################
 # POST - Create a new secret
 
-@sekrets_router.post("/secret", tags=["secrets"], status_code=201)
+@sekrets_router.post("/secret", tags=["secrets"], status_code=201, response_model=PostModelResponse)
 def create_secret(secret: CreateSecret, current_user: dict = Depends(auth_service.get_current_user)):
     result = create_secret_db(secret, current_user.get('id'))
 
@@ -24,7 +27,7 @@ def create_secret(secret: CreateSecret, current_user: dict = Depends(auth_servic
 ######################
 # Get all secrets
 
-@sekrets_router.get("/secrets", tags=["secrets"], status_code=200)
+@sekrets_router.get("/secrets", tags=["secrets"], status_code=200, response_model=list[SecretModel])
 def get_secrets_all(offset: int = 0, limit: int = 100, current_user: dict = Depends(auth_service.get_current_user)):
     result = get_all_secrets_from_db(offset, limit)
     if not result:
@@ -34,7 +37,7 @@ def get_secrets_all(offset: int = 0, limit: int = 100, current_user: dict = Depe
 #############################
 # Get a secret by secret_id
 
-@sekrets_router.get("/secret/{secret_id}", tags=["secrets"], status_code=200)
+@sekrets_router.get("/secret/{secret_id}", tags=["secrets"], status_code=200, response_model=SecretModel)
 def get_secret_id(secret_id: int, current_user: dict = Depends(auth_service.get_current_user)):
     # Prendre un token en paramètre et vérifier si l'utilisateur est authentifié avant de retourner les informations, et vérifier si l'utilisateur a le droit de voir le secret
     result = get_secret_by_id(secret_id)
@@ -56,7 +59,7 @@ def get_secrets(space_id: int, current_user: dict = Depends(auth_service.get_cur
 ################################
 # Update a secret by secret_id
 
-@sekrets_router.put("/secret/{secret_id}", tags=["secrets"], status_code=200)
+@sekrets_router.put("/secret/{secret_id}", tags=["secrets"], status_code=200, response_model=PutModelResponse)
 def update_secret_content(secret_id: int, secret: UpdateSecret, current_user: dict = Depends(auth_service.get_current_user)):
     # Prendre un token en paramètre et vérifier si l'utilisateur est authentifié avant de mettre à jour les informations si l'utilisateur est le propriétaire du secret
     result = update_secret_in_db(secret_id, secret)
@@ -67,7 +70,7 @@ def update_secret_content(secret_id: int, secret: UpdateSecret, current_user: di
 #########################
 # Delete a secret by id
 
-@sekrets_router.delete("/secret/{secret_id}", tags=["secrets"], status_code=200)
+@sekrets_router.delete("/secret/{secret_id}", tags=["secrets"], status_code=200, response_model=DeleteModelResponse)
 def delete_secret(secret_id: int, current_user: dict = Depends(auth_service.get_current_user)):
     # Prendre un token en paramètre et vérifier si l'utilisateur est authentifié avant de supprimer les informations, et vérifier si l'utilisateur a le droit de supprimer le secret il doit être le propriétaire du secret
     result = delete_secret_in_db(secret_id)
@@ -78,7 +81,7 @@ def delete_secret(secret_id: int, current_user: dict = Depends(auth_service.get_
 ################################
 # Like a secret by secret_id
 
-@sekrets_router.post("/secret/{secret_id}/like", tags=["secrets"], status_code=200)
+@sekrets_router.post("/secret/{secret_id}/like", tags=["secrets"], status_code=200, response_model=PostModelResponse)
 def like_secret(secret_id: int, current_user: dict = Depends(auth_service.get_current_user)):
     # Prendre un token en paramètre et vérifier si l'utilisateur est authentifié avant de liker le secret
     result = like_secret_in_db(secret_id)

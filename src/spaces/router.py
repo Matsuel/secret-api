@@ -10,6 +10,9 @@ from .service import delete_space
 from .service import accept_invitation
 from fastapi import Depends
 from ..auth.service import get_current_user
+from src.models.results import PostModelResponse, PutModelResponse, DeleteModelResponse, SpaceModel
+
+
 class SpaceCreateRequest(BaseModel):
     name: str
     is_public: bool
@@ -20,16 +23,14 @@ class SpaceUpdateRequest(BaseModel):
 
 spaces_router = APIRouter()
 
-@spaces_router.get("/spaces", tags=["spaces"])
+@spaces_router.get("/spaces", tags=["spaces"], response_model=list[SpaceModel], status_code=200)
 def getSpacesList():
     # Prendre un token en paramètre et vérifier si l'utilisateur est authentifié avant de retourner les spaces
     spaces = get_spaces_list()
-    if not spaces:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No spaces found")
     return spaces
 
 
-@spaces_router.get("/space/{space_id}", tags=["spaces"])
+@spaces_router.get("/space/{space_id}", tags=["spaces"], response_model=SpaceModel, status_code=200)
 def getSpace(space_id: int):
     # Prendre un token en paramètre et vérifier si l'utilisateur est authentifié avant de retourner les informations
     space = get_space(space_id)
@@ -37,16 +38,15 @@ def getSpace(space_id: int):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Space not found")
     return space
 
-@spaces_router.post("/space", tags=["spaces"])
+@spaces_router.post("/space", tags=["spaces"], status_code=201, response_model=PostModelResponse)
 def createSpace(space: SpaceCreateRequest):
         # Prendre un token en paramètre et vérifier si l'utilisateur est authentifié avant de créer un space avec l'id de l'utilisateur comme propriétaire
-        print(f"Received: name={space.name}, is_public={space.is_public}")
         new_space = create_space(space.name, space.is_public)
         if not new_space:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Space could not be created")
         return {"message": "Space created successfully"}
 
-@spaces_router.put("/space/{space_id}", tags=["spaces"])
+@spaces_router.put("/space/{space_id}", tags=["spaces"], status_code=200, response_model=PutModelResponse)
 def updateSpace(space_id: int, space: SpaceUpdateRequest):
         # Prendre un token en paramètre et vérifier si l'utilisateur est authentifié avant de mettre à jour les informations si l'utilisateur est le propriétaire du space
         updated_space = update_space(space_id, space.name, space.is_public)
@@ -70,7 +70,7 @@ def acceptInvitation(space_id: int, current_user: dict = Depends(get_current_use
     
     return {"message": "Invitation accepted"}
 
-@spaces_router.delete("/space/{space_id}", tags=["spaces"])
+@spaces_router.delete("/space/{space_id}", tags=["spaces"], status_code=200, response_model=DeleteModelResponse)
 def deleteSpace(space_id: int):
     # Prendre un token en paramètre et vérifier si l'utilisateur est authentifié avant de supprimer si l'utilisateur est le propriétaire du space
      deleteSpace = delete_space(space_id)
