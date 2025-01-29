@@ -10,8 +10,6 @@ users_router = APIRouter()
 @users_router.get("/users", tags=["users"], response_model=list[UserInfosModel], status_code=status.HTTP_200_OK)
 async def get_users(offset: int = 0, limit: int = 10, current_user: dict = Depends(auth_service.get_current_user)):
     users = get_users_list(offset, limit)
-    if not users:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No users found")
     return users
 
 @users_router.get("/user/{user_id}", tags=["users"], response_model=UserInfosModel, status_code=status.HTTP_200_OK)

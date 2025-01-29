@@ -20,7 +20,6 @@ def get_category_by_id(category_id: int, current_user: dict = Depends(auth_servi
 
 @categories_router.post("/categories", tags=["categories"], status_code=status.HTTP_201_CREATED, response_model=PostModelResponse)
 def create_category(category: CategoryModel, current_user: dict = Depends(auth_service.get_current_user)):
-    # TODO: Add authentication and check if user is admin
     result = create_category_in_db(category)
     if result is None:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Category already exists")
@@ -35,7 +34,6 @@ def update_category(category_id: int, category: CategoryEdit, current_user: dict
 
 @categories_router.delete("/categories/{category_id}", tags=["categories"], response_model=DeleteModelResponse, status_code=status.HTTP_200_OK)
 def delete_category(category_id: int, current_user: dict = Depends(auth_service.get_current_user)):
-    # TODO: Add authentication and check if user is admin
     result = delete_category_in_db(category_id)
     if not result:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Category not found")

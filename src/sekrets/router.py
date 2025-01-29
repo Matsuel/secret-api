@@ -30,8 +30,6 @@ def create_secret(secret: CreateSecret, current_user: dict = Depends(auth_servic
 @sekrets_router.get("/secrets", tags=["secrets"], status_code=status.HTTP_200_OK, response_model=list[SecretModel])
 def get_secrets_all(offset: int = 0, limit: int = 100, current_user: dict = Depends(auth_service.get_current_user)):
     result = get_all_secrets_from_db(offset, limit)
-    if not result:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No secrets found")
     return result
 
 #############################
@@ -50,7 +48,6 @@ def get_secret_id(secret_id: int, current_user: dict = Depends(auth_service.get_
 
 @sekrets_router.get("/secret/space/{space_id}", tags=["secrets"], status_code=status.HTTP_200_OK)
 def get_secrets(space_id: int, current_user: dict = Depends(auth_service.get_current_user)):
-    # Prendre un token en paramètre et vérifier si l'utilisateur est authentifié avant de retourner les secrets
     result = get_secrets_by_space_id(space_id)
     if not result:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Secret not found")
@@ -61,7 +58,6 @@ def get_secrets(space_id: int, current_user: dict = Depends(auth_service.get_cur
 
 @sekrets_router.put("/secret/{secret_id}", tags=["secrets"], status_code=status.HTTP_200_OK, response_model=PutModelResponse)
 def update_secret_content(secret_id: int, secret: UpdateSecret, current_user: dict = Depends(auth_service.get_current_user)):
-    # Prendre un token en paramètre et vérifier si l'utilisateur est authentifié avant de mettre à jour les informations si l'utilisateur est le propriétaire du secret
     result = update_secret_in_db(secret_id, secret)
     if not result:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Secret not found")
@@ -72,7 +68,6 @@ def update_secret_content(secret_id: int, secret: UpdateSecret, current_user: di
 
 @sekrets_router.delete("/secret/{secret_id}", tags=["secrets"], status_code=status.HTTP_200_OK, response_model=DeleteModelResponse)
 def delete_secret(secret_id: int, current_user: dict = Depends(auth_service.get_current_user)):
-    # Prendre un token en paramètre et vérifier si l'utilisateur est authentifié avant de supprimer les informations, et vérifier si l'utilisateur a le droit de supprimer le secret il doit être le propriétaire du secret
     result = delete_secret_in_db(secret_id)
     if not result:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Secret not found")
@@ -83,7 +78,6 @@ def delete_secret(secret_id: int, current_user: dict = Depends(auth_service.get_
 
 @sekrets_router.post("/secret/{secret_id}/like", tags=["secrets"], status_code=status.HTTP_200_OK, response_model=PostModelResponse)
 def like_secret(secret_id: int, current_user: dict = Depends(auth_service.get_current_user)):
-    # Prendre un token en paramètre et vérifier si l'utilisateur est authentifié avant de liker le secret
     result = like_secret_in_db(secret_id)
     if not result:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Secret not found")
