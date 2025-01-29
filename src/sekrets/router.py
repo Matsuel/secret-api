@@ -22,6 +22,9 @@ def create_secret(secret: CreateSecret, current_user: dict = Depends(auth_servic
     if result == "Utilisateur non trouvé":
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Utilisateur non trouvé")
     
+    if result == "Catégorie non trouvé":
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Catégorie non trouvé")
+    
     return {"message": "Secret created successfully"}
 
 ######################

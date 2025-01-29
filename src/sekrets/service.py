@@ -1,10 +1,14 @@
 from src.models.user import User
+from src.categories.service import get_category_by_id_in_db
 from src.models.secret import Secret, CreateSecret
 from src.models.database import SessionLocal
 from sqlalchemy import insert, update
 
 def create_secret_db(secret: CreateSecret, user_id: int):
     with SessionLocal() as session:
+        
+        if not get_category_by_id_in_db(secret.category_id):
+            return "Catégorie non trouvé"
 
         user = session.query(User).filter(User.id == user_id).first()
         if not user:
