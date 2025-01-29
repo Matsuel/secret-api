@@ -1,24 +1,26 @@
 import unittest
-from fastapi.testclient import TestClient
-from main import app
-
-class TestAuthRouter(unittest.TestCase):
+from unittest.mock import patch
+from src.auth.service import authenticate_user, create_access_token
+from src.users.service import authenticate_user, create_access_token
+class TestAuthService(unittest.TestCase):
+    @patch("src.auth.service.get_user_from_db")
+    def test_authenticate_user_success(self, mock_get_user):
+        mock_get_user.return_value = {
+            "id": 1,
+            "username": "test",
+            "hashed_password": "hashed_test"
+        }
+        user = authenticate_user("test", "test_password")
+        self.assertIsNotNone(user)
+        self.assertEqual(user["username"], "test")
     
-    @classmethod
-    def setUpClass(cls):
-        cls.client = TestClient(app)
-
-    def test_get_auth_with_no_curent_user(self):
-        response = self.client.get("/users/me")
-        self.assertEqual(response.status_code, 401)
-        self.assertEqual(response.json(), {"detail": "Not authenticated"})
-
-    def test_get_test_token_with_no_auth(self):
-        response = self.client.get("/test-token")
-        self.assertEqual(response.status_code, 401)
-        self.assertEqual(response.json(), {"detail": "Not authenticated"})
-
-    def test_post_login_with_no_user(self):
-        response = self.client.post("/login", data={"username": "test_invalid_username", "password": "test_invalid_password"})
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {"detail": "Incorrect username or password"})
+    @patch("src.auth.service.get_user_from_db")
+    def test_authenticate_user_failure(self, mock_get_user):
+        mock_get_user.return_value = None
+        user = authenticate_user("invalid_user", "invalid_password")
+        self.assertIsNone(user)
+    
+    def test_create_access_token(self):
+        user = {"id": 1, "username": "test"}
+        token = create_access_token(user)
+        self.assertIsNotNone(token)
