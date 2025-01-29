@@ -14,7 +14,7 @@ class User(Base):
 
     # Relation avec Secret
     secrets = relationship("Secret", back_populates="user")
-    
+
 class UserModelCreation(BaseModel):
     username: str
     password: str

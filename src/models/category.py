@@ -15,9 +15,8 @@ class Category(Base):
 
     name = Column(String, nullable=False)
 
-     # Relation avec Secret
+    # Relation avec Secret
     secrets = relationship("Secret", back_populates="category")
-    
     
 class CategoryModel(BaseModel):
     # TODO: user_id should be a foreign key to the users table
