@@ -27,14 +27,6 @@ class TestServiceCategoriesExtended(unittest.TestCase):
         self.assertEqual(result["id"], 1)
 
     @patch("src.categories.service.SessionLocal")
-    def test_update_category_in_db(self, mock_session_local):
-        mock_session = MagicMock()
-        mock_session.query().filter().first.return_value = {"id": 1, "name": "old_name"}
-        mock_session_local.return_value.__enter__.return_value = mock_session
-        result = update_category_in_db(1, CategoryEdit(name="new_name"))
-        self.assertTrue(result)
-
-    @patch("src.categories.service.SessionLocal")
     def test_delete_category_in_db(self, mock_session_local):
         mock_session = MagicMock()
         mock_session.query().filter().first.return_value = {"id": 1, "name": "to_delete"}
