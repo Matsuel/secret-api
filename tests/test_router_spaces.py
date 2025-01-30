@@ -57,7 +57,7 @@ class TestSpacesRouter(unittest.TestCase):
     def test_create_space_with_success(self, mock_create_space):
         mock_create_space.return_value = True
         response = self.client.post("/space", json={"name": "test", "is_public": True})
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
         self.assertEqual(response.json(), {"message": "Space created successfully"})
 
     @patch("src.spaces.router.create_space")
