@@ -59,3 +59,7 @@ or
 ```bash
 python3 -m unittest discover -s tests
 ```
+
+## Schema de la base de données
+
+![Schema de la base de données](./schemas/db.png)
