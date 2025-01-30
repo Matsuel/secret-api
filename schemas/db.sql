@@ -55,3 +55,4 @@ Ref: followers.follower_id > users.id
 Ref: shared_spaces_users.shared_space_id > shared_spaces.id
 Ref: secrets.shared_space_id > shared_spaces.id
 Ref: secrets.category_id > categories.id
+Ref: liked_secrets.secret_id > secrets.id
