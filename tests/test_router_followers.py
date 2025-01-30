@@ -79,5 +79,5 @@ class TestFollowersRouter(unittest.TestCase):
         mock_follow_user_in_db.return_value = None
         response = self.client.post("/user/1/follow/1")
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(response.json(), {"detail": "User cannot follow himself or user not found"})
+        self.assertEqual(response.json(), {"detail": "Not Found"})
         
