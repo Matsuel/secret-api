@@ -42,7 +42,7 @@ class TestSekretsService(unittest.TestCase):
         )
         mock_session = MagicMock()
         mock_session_local.return_value.__enter__.return_value = mock_session
-        create_secret_db(sekret)
+        create_secret_db(sekret, sekret.user_id)
         mock_session.commit = MagicMock()
         result = like_secret_in_db(1)
         mock_session.execute.assert_called_once()
@@ -65,7 +65,7 @@ class TestSekretsService(unittest.TestCase):
         )
         mock_session = MagicMock()
         mock_session_local.return_value.__enter__.return_value = mock_session
-        create_secret_db(sekret)
+        create_secret_db(sekret, sekret.user_id)
         mock_session.commit = MagicMock()
         result = delete_secret_in_db(1)
         mock_session.execute.assert_called_once()
@@ -88,7 +88,7 @@ class TestSekretsService(unittest.TestCase):
         )
         mock_session = MagicMock()
         mock_session_local.return_value.__enter__.return_value = mock_session
-        create_secret_db(sekret)
+        create_secret_db(sekret, sekret.user_id)
         mock_session.commit = MagicMock()
         mock_session.execute.reset_mock()
         sekret.text = "new_text"

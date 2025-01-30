@@ -53,6 +53,7 @@ class Secret(Base):
     )
 
 class CreateSecret(BaseModel):
+    user_id: int
     text: str
     category_id: int
     is_public: bool
