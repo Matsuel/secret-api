@@ -27,6 +27,8 @@ spaces_router = APIRouter()
 def getSpacesList():
     # Prendre un token en paramètre et vérifier si l'utilisateur est authentifié avant de retourner les spaces
     spaces = get_spaces_list()
+    if not spaces:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No spaces found")
     return spaces
 
 

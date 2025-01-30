@@ -14,7 +14,7 @@ class TestServiceCategoriesExtended(unittest.TestCase):
         mock_check_name.return_value = False
         mock_session = MagicMock()
         mock_session_local.return_value.__enter__.return_value = mock_session
-        result = create_category_in_db(CategoryModel(name="test"))
+        result = create_category_in_db(CategoryModel(id=1, name="test"))
         mock_check_name.assert_called_once_with("test")
         self.assertTrue(result)
 
